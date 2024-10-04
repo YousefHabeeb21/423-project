@@ -72,78 +72,60 @@ document.addEventListener("DOMContentLoaded", () => {
   };
   const pacmanSpeed = 200;
   squares[pacmanCurrentIndex].classList.add("pac-man");
-  //get the coordinates of pacman on the grid with X and Y axis
-  // function getCoordinates(index) {
-  //   return [index % width, Math.floor(index / width)]
-  // }
 
-  // console.log(getCoordinates(pacmanCurrentIndex))
+
+
+
+
+  function canMoveTo(newIndex) {
+    return (
+      !squares[newIndex].classList.contains("wall") &&
+      !squares[newIndex].classList.contains("ghost-lair")
+    );
+  }
 
   // set pacman velocity
   function setPacmanVelocity(e) {
     switch (e.keyCode) {
-      case 37:
-        if (
-          pacmanCurrentIndex % width !== 0 &&
-          !squares[pacmanCurrentIndex - 1].classList.contains("wall") &&
-          !squares[pacmanCurrentIndex - 1].classList.contains("ghost-lair")
-        ) {
-          pacmanVelocity.y = 0;
-          pacmanVelocity.x = -1;
-        }
+      case 37: // left arrow
+        intendedDirection = { x: -1, y: 0 };
         break;
-      case 38:
-        if (
-          pacmanCurrentIndex - width >= 0 &&
-          !squares[pacmanCurrentIndex - width].classList.contains("wall") &&
-          !squares[pacmanCurrentIndex - width].classList.contains("ghost-lair")
-        ) {
-          pacmanVelocity.y = -1;
-          pacmanVelocity.x = 0;
-        }
+      case 38: // up arrow
+        intendedDirection = { x: 0, y: -1 };
         break;
-      case 39:
-        if (
-          pacmanCurrentIndex % width < width - 1 &&
-          !squares[pacmanCurrentIndex + 1].classList.contains("wall") &&
-          !squares[pacmanCurrentIndex + 1].classList.contains("ghost-lair")
-        ) {
-          pacmanVelocity.y = 0;
-          pacmanVelocity.x = 1;
-        }
+      case 39: // right arrow
+        intendedDirection = { x: 1, y: 0 };
         break;
-      case 40:
-        if (
-          pacmanCurrentIndex + width < width * width &&
-          !squares[pacmanCurrentIndex + width].classList.contains("wall") &&
-          !squares[pacmanCurrentIndex + width].classList.contains("ghost-lair")
-        ) {
-          pacmanVelocity.y = 1;
-          pacmanVelocity.x = 0;
-        }
+      case 40: // down arrow
+        intendedDirection = { x: 0, y: 1 };
         break;
     }
-    checkForGameOver();
-    console.log(pacmanVelocity, e.keyCode);
   }
 
-  //move pacman
+ 
   function movePacman() {
     setInterval(() => {
-      const newIndex = pacmanCurrentIndex + pacmanVelocity.y * width + pacmanVelocity.x;
-  
-      // Check if next square is a valid move
-      if (!squares[newIndex].classList.contains("wall") && !squares[newIndex].classList.contains("ghost-lair")) {
-          squares[pacmanCurrentIndex].classList.remove("pac-man");  
-          pacmanCurrentIndex = newIndex;  
-          squares[pacmanCurrentIndex].classList.add("pac-man"); 
-  
-        pacDotEaten(); 
-        powerPelletEaten();  
-        checkForGameOver();  
+      const nextIndex = pacmanCurrentIndex + pacmanVelocity.y * width + pacmanVelocity.x;
+      const intendedNextIndex = pacmanCurrentIndex + intendedDirection.y * width + intendedDirection.x;
+
+      // Check if the intended direction is valid before moving
+      if (canMoveTo(intendedNextIndex)) {
+        pacmanVelocity = { ...intendedDirection }; // Apply the intended direction
+        squares[pacmanCurrentIndex].classList.remove("pac-man");
+        pacmanCurrentIndex = intendedNextIndex; // Move to the intended direction
+      } else if (canMoveTo(nextIndex)) {
+        squares[pacmanCurrentIndex].classList.remove("pac-man");
+        pacmanCurrentIndex = nextIndex; // Continue in the current direction
       }
+
+      squares[pacmanCurrentIndex].classList.add("pac-man");
+
+      pacDotEaten();
+      powerPelletEaten();
+      checkForGameOver();
     }, pacmanSpeed);
   }
+
   
 
   // what happens when you eat a pac-dot
@@ -288,6 +270,7 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("start-screen").style.display = "none";
       //set pacman velocity and enable movement
       document.addEventListener("keyup", setPacmanVelocity);
+      
       movePacman();
       // move the Ghosts randomly
       ghosts.forEach((ghost) => moveGhost(ghost));
