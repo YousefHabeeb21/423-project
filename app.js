@@ -89,7 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
           !squares[pacmanCurrentIndex - 1].classList.contains("ghost-lair")
         ) {
           pacmanVelocity.y = 0;
-          pacmanVelocity.x = 1;
+          pacmanVelocity.x = -1;
         }
         break;
       case 38:
@@ -98,8 +98,8 @@ document.addEventListener("DOMContentLoaded", () => {
           !squares[pacmanCurrentIndex - width].classList.contains("wall") &&
           !squares[pacmanCurrentIndex - width].classList.contains("ghost-lair")
         ) {
-          pacmanVelocity.y = 0;
-          pacmanVelocity.x = -1;
+          pacmanVelocity.y = -1;
+          pacmanVelocity.x = 0;
         }
         break;
       case 39:
@@ -108,8 +108,8 @@ document.addEventListener("DOMContentLoaded", () => {
           !squares[pacmanCurrentIndex + 1].classList.contains("wall") &&
           !squares[pacmanCurrentIndex + 1].classList.contains("ghost-lair")
         ) {
-          pacmanVelocity.y = 1;
-          pacmanVelocity.x = 0;
+          pacmanVelocity.y = 0;
+          pacmanVelocity.x = 1;
         }
         break;
       case 40:
@@ -118,7 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
           !squares[pacmanCurrentIndex + width].classList.contains("wall") &&
           !squares[pacmanCurrentIndex + width].classList.contains("ghost-lair")
         ) {
-          pacmanVelocity.y = -1;
+          pacmanVelocity.y = 1;
           pacmanVelocity.x = 0;
         }
         break;
@@ -129,63 +129,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
   //move pacman
   function movePacman() {
-    squares[pacmanCurrentIndex].classList.remove("pac-man");
     setInterval(() => {
-      if (pacmanVelocity.x === 1 && pacmanVelocity.y == 0) {
-        if (
-          pacmanCurrentIndex % width !== 0 &&
-          !squares[pacmanCurrentIndex - 1].classList.contains("wall") &&
-          !squares[pacmanCurrentIndex - 1].classList.contains("ghost-lair")
-        ) {
-          squares[pacmanCurrentIndex].classList.remove("pac-man");
-
-          pacmanCurrentIndex -= 1;
-        }
-        if (squares[pacmanCurrentIndex - 1] === squares[363]) {
-          pacmanCurrentIndex = 391;
-        }
+      const newIndex = pacmanCurrentIndex + pacmanVelocity.y * width + pacmanVelocity.x;
+  
+      // Check if next square is a valid move
+      if (!squares[newIndex].classList.contains("wall") && !squares[newIndex].classList.contains("ghost-lair")) {
+          squares[pacmanCurrentIndex].classList.remove("pac-man");  
+          pacmanCurrentIndex = newIndex;  
+          squares[pacmanCurrentIndex].classList.add("pac-man"); 
+  
+        pacDotEaten(); 
+        powerPelletEaten();  
+        checkForGameOver();  
       }
-      if (pacmanVelocity.x === -1 && pacmanVelocity.y == 0) {
-        if (
-          pacmanCurrentIndex - width >= 0 &&
-          !squares[pacmanCurrentIndex - width].classList.contains("wall") &&
-          !squares[pacmanCurrentIndex - width].classList.contains("ghost-lair")
-        ) {
-          squares[pacmanCurrentIndex].classList.remove("pac-man");
-
-          pacmanCurrentIndex -= width;
-        }
-      }
-      if (pacmanVelocity.x === 0 && pacmanVelocity.y == 1) {
-        if (
-          pacmanCurrentIndex % width < width - 1 &&
-          !squares[pacmanCurrentIndex + 1].classList.contains("wall") &&
-          !squares[pacmanCurrentIndex + 1].classList.contains("ghost-lair")
-        ) {
-          squares[pacmanCurrentIndex].classList.remove("pac-man");
-
-          pacmanCurrentIndex += 1;
-        }
-        if (squares[pacmanCurrentIndex + 1] === squares[392]) {
-          pacmanCurrentIndex = 364;
-        }
-      }
-      if (pacmanVelocity.x === 0 && pacmanVelocity.y == -1) {
-        if (
-          pacmanCurrentIndex + width < width * width &&
-          !squares[pacmanCurrentIndex + width].classList.contains("wall") &&
-          !squares[pacmanCurrentIndex + width].classList.contains("ghost-lair")
-        ) {
-          squares[pacmanCurrentIndex].classList.remove("pac-man");
-          pacmanCurrentIndex += width;
-        }
-      }
-
-      squares[pacmanCurrentIndex].classList.add("pac-man");
-      pacDotEaten();
-      powerPelletEaten();
     }, pacmanSpeed);
   }
+  
 
   // what happens when you eat a pac-dot
   function pacDotEaten() {
@@ -193,7 +152,7 @@ document.addEventListener("DOMContentLoaded", () => {
       score++;
       if (score < 50) {
         document.getElementById("score").classList.add("low-score");
-      } else if (score > 100) {
+      } else if (score <= 100) {
         document.getElementById("score").classList.add("mid-score");
       } else if (score > 200) {
         document.getElementById("score").classList.add("high-score");
@@ -308,7 +267,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   //check for a win - more is when this score is reached
   function checkForWin() {
-    if (score === 274) {
+    if (score >= 274) {
       ghosts.forEach((ghost) => clearInterval(ghost.timerId));
       document.removeEventListener("keyup", movePacman);
       pacmanVelocity.x = 0;

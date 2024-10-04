@@ -87,6 +87,7 @@ body {
 .pac-man {
   background-color: rgb(247, 232, 22);
   border-radius: 10px;
+  transition: transform 0.1s ease;
 }
 h2 {
   color: white;
