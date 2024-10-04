@@ -54,19 +54,27 @@ body {
 }
 
 .blinky {
-  background-color: red;
+  background-image: url('green.jpeg');
+  background-size: cover; 
+  background-position: center;
 }
 
 .stinky {
-  background-color: rgb(221, 18, 130);
+  background-image: url('red.png');
+  background-size: cover; 
+  background-position: center;
 }
 
 .inky {
-  background-color: rgb(15, 214, 204);
+  background-image: url('pink.webp');
+  background-size: cover; 
+  background-position: center;
 }
 
 .clyde {
-  background-color: rgb(243, 125, 78);
+  background-image: url('orange.jpeg');
+  background-size: cover; 
+  background-position: center;;
 }
 
 .ghost {
@@ -75,19 +83,20 @@ body {
 }
 
 .scared-ghost {
-  background-color: purple;
-  border: 0px;
-  border-radius: 0px;
+  background-image: url('scared.png');
+  background-size: cover; 
+  background-position: center;
 }
 
 .wall {
   background-color: rgb(8, 14, 102);
+  
 }
 
 .pac-man {
-  background-color: rgb(247, 232, 22);
-  border-radius: 10px;
-  transition: transform 0.1s ease;
+  background-image: url('pacman.png'); /* Ensure the path is correct */
+  background-size: cover; 
+  background-position: center;
 }
 h2 {
   color: white;
