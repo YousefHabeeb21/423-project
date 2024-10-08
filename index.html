@@ -1,22 +1,20 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
+  <script src="https://aka.ms/csspeech/jsbrowserpackageraw"></script>
+
   <head>
     <meta charset="utf-8" />
     <title>PacMan</title>
     <link rel="stylesheet" href="styles.css" />
-    
-    <!-- Include Azure Speech SDK in the head -->
-    <script src="https://aka.ms/csspeech/jsbrowserpackageraw"></script>
 
-    <!-- Your app.js should be loaded after the SDK -->
     <script src="app.js" charset="utf-8"></script>
   </head>
 
   <body>
     <div class="overlay-screen" id="start-screen">
       <h1>PACMAN</h1>
-      <h2 id="start-msg">Press ENTER to start</h2>
-      <h2>Use arrow keys to move</h2>
+      <h2 id="start-msg">say "START" to start</h2>
+      <h2>Good Luck!</h2>
     </div>
     <div class="game-container">
       <div class="grid"></div>
