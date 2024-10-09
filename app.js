@@ -84,23 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   }
 
-  // // set pacman velocity
-  // function setPacmanVelocity(e) {
-  //   switch (e.keyCode) {
-  //     case 37: // left arrow
-  //       intendedDirection = { x: -1, y: 0 };
-  //       break;
-  //     case 38: // up arrow
-  //       intendedDirection = { x: 0, y: -1 };
-  //       break;
-  //     case 39: // right arrow
-  //       intendedDirection = { x: 1, y: 0 };
-  //       break;
-  //     case 40: // down arrow
-  //       intendedDirection = { x: 0, y: 1 };
-  //       break;
-  //   }
-  // }
+  
   function handleVoiceCommand(command) {
     command = command.toLowerCase();
     if (command.includes("left")) {
@@ -170,12 +154,10 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    //make the ghosts stop flashing
     function unScareGhosts() {
       ghosts.forEach((ghost) => (ghost.isScared = false));
     }
 
-    //create ghosts using Constructors
     class Ghost {
       constructor(className, startIndex, speed) {
         this.className = className;
@@ -187,7 +169,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    //all my ghosts
     ghosts = [
       new Ghost("blinky", 348, 100),
       new Ghost("stinky", 376, 400),
@@ -195,7 +176,6 @@ document.addEventListener("DOMContentLoaded", () => {
       new Ghost("clyde", 379, 200),
     ];
 
-    //draw my ghosts onto the grid
     ghosts.forEach((ghost) => {
       squares[ghost.currentIndex].classList.add(ghost.className);
       squares[ghost.currentIndex].classList.add("ghost");
@@ -280,34 +260,33 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   
 
+    const startBtn = document.getElementById("start-btn");
 
+    startBtn.addEventListener("click", () => {
+      initializeMicrophone();
+    });
 
+  
+  function initializeMicrophone() {
 
-  const speechConfig = SpeechSDK.SpeechConfig.fromSubscription("ad48cd93bc2f4230b8e689824d5fc2ee", "centralus");
+    const speechConfig = SpeechSDK.SpeechConfig.fromSubscription("38e65162f9dc4c7ab9a6fa5107487b36", "centralus");
 
-  speechConfig.speechRecognitionLanguage = "en-US"; 
+    speechConfig.speechRecognitionLanguage = "en-US"; 
 
-  const audioConfig = SpeechSDK.AudioConfig.fromDefaultMicrophoneInput();
+    const audioConfig = SpeechSDK.AudioConfig.fromDefaultMicrophoneInput();
 
-  const recognizer = new SpeechSDK.SpeechRecognizer(speechConfig, audioConfig);
+    const recognizer = new SpeechSDK.SpeechRecognizer(speechConfig, audioConfig);
 
-
-// Handle recognizing speech (partial results)
-
-
-// Handle recognized speech (final results)
-recognizer.recognized = (s, e) => {
-  if (e.result.reason === SpeechSDK.ResultReason.RecognizedSpeech) {
-    handleVoiceCommand(e.result.text); // Final result
-  } else if (e.result.reason === SpeechSDK.ResultReason.NoMatch) {
-    console.log("No speech recognized.");
+    recognizer.recognized = (s, e) => {
+      if (e.result.reason === SpeechSDK.ResultReason.RecognizedSpeech) {
+        handleVoiceCommand(e.result.text); 
+      } else if (e.result.reason === SpeechSDK.ResultReason.NoMatch) {
+        console.log("No speech recognized.");
+      }
+    };
+      
+    recognizer.startContinuousRecognitionAsync();
   }
-};
-    
-
-  // recognizer.recognizerOptions.autoDetectSourceLanguageConfig.speechTimeout = 500;
-
-  recognizer.startContinuousRecognitionAsync();
 });
 
 
