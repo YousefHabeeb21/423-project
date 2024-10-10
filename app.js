@@ -171,7 +171,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    ghosts = [
+    var ghosts = [
       new Ghost("blinky", 348, 100),
       new Ghost("stinky", 376, 400),
       new Ghost("inky", 351, 300),
