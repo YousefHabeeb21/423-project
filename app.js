@@ -1,3 +1,5 @@
+import { subscriptionKey, region } from './config.js'; 
+
 document.addEventListener("DOMContentLoaded", () => {
   const scoreDisplay = document.getElementById("score");
   const width = 28;
@@ -184,10 +186,13 @@ document.addEventListener("DOMContentLoaded", () => {
     function moveGhost(ghost) {
       const directions = [-1, +1, width, -width];
       let direction = directions[Math.floor(Math.random() * directions.length)];
-
+  
       ghost.timerId = setInterval(function () {
         //if the next square your ghost is going to go to does not have a ghost and does not have a wall
-        if (canMoveTo(ghost.currentIndex + direction)) {
+        if (
+          !squares[ghost.currentIndex + direction].classList.contains("ghost") &&
+          !squares[ghost.currentIndex + direction].classList.contains("wall")
+        ) {
           //remove the ghosts classes
           squares[ghost.currentIndex].classList.remove(ghost.className);
           squares[ghost.currentIndex].classList.remove("ghost", "scared-ghost");
@@ -196,13 +201,12 @@ document.addEventListener("DOMContentLoaded", () => {
           squares[ghost.currentIndex].classList.add(ghost.className, "ghost");
           //else find a new random direction to go in
         } else direction = directions[Math.floor(Math.random() * directions.length)];
-
+  
         //if the ghost is currently scared
         if (ghost.isScared) {
           squares[ghost.currentIndex].classList.add("scared-ghost");
         }
-
-        //if the ghost is currently scared and pacman is on it
+  
         if (
           ghost.isScared &&
           squares[ghost.currentIndex].classList.contains("pac-man")
@@ -213,7 +217,6 @@ document.addEventListener("DOMContentLoaded", () => {
             "scared-ghost"
           );
           ghost.currentIndex = ghost.startIndex;
-          // score += 100;
           squares[ghost.currentIndex].classList.add(ghost.className, "ghost");
         }
         checkForGameOver();
@@ -260,16 +263,16 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   
 
-    const startBtn = document.getElementById("start-btn");
 
-    startBtn.addEventListener("click", () => {
+    document.addEventListener("click", () => {
       initializeMicrophone();
     });
 
   
+
   function initializeMicrophone() {
 
-    const speechConfig = SpeechSDK.SpeechConfig.fromSubscription("38e65162f9dc4c7ab9a6fa5107487b36", "centralus");
+    const speechConfig = SpeechSDK.SpeechConfig.fromSubscription(subscriptionKey, region);
 
     speechConfig.speechRecognitionLanguage = "en-US"; 
 
