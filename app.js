@@ -44,14 +44,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const squares = [];
 
-  //create your board
   function createBoard() {
     for (let i = 0; i < layout.length; i++) {
       const square = document.createElement("div");
       grid.appendChild(square);
       squares.push(square);
 
-      //add layout to the board
       if (layout[i] === 0) {
         squares[i].classList.add("pac-dot");
       } else if (layout[i] === 1) {
@@ -65,14 +63,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   createBoard();
 
-  //create Characters
-  //draw pacman onto the board
   let pacmanCurrentIndex = 490;
-  let pacmanVelocity = {
-    x: 0,
-    y: 0,
-  };
-  const pacmanSpeed = 200;
+  let pacmanVelocity = {x: 0, y: 0,};
+  let intendedDirection = {x: 0, y: 0,};
   squares[pacmanCurrentIndex].classList.add("pac-man");
 
 
@@ -108,14 +101,14 @@ document.addEventListener("DOMContentLoaded", () => {
         const nextIndex = pacmanCurrentIndex + pacmanVelocity.y * width + pacmanVelocity.x;
         const intendedNextIndex = pacmanCurrentIndex + intendedDirection.y * width + intendedDirection.x;
 
-        // Check if the intended direction is valid before moving
+        
         if (canMoveTo(intendedNextIndex)) {
-          pacmanVelocity = { ...intendedDirection }; // Apply the intended direction
+          pacmanVelocity = { ...intendedDirection }; 
           squares[pacmanCurrentIndex].classList.remove("pac-man");
-          pacmanCurrentIndex = intendedNextIndex; // Move to the intended direction
+          pacmanCurrentIndex = intendedNextIndex;
         } else if (canMoveTo(nextIndex)) {
           squares[pacmanCurrentIndex].classList.remove("pac-man");
-          pacmanCurrentIndex = nextIndex; // Continue in the current direction
+          pacmanCurrentIndex = nextIndex; 
         }
 
         squares[pacmanCurrentIndex].classList.add("pac-man");
@@ -127,8 +120,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
 
-
-    // what happens when you eat a pac-dot
     function pacDotEaten() {
       if (squares[pacmanCurrentIndex].classList.contains("pac-dot")) {
         score++;
@@ -145,7 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    //what happens when you eat a power-pellet
+   
     function powerPelletEaten() {
       if (squares[pacmanCurrentIndex].classList.contains("power-pellet")) {
         score += 10;
@@ -223,7 +214,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }, ghost.speed);
     }
 
-    //check for a game over
+   
     function checkForGameOver() {
       if (
         squares[pacmanCurrentIndex].classList.contains("ghost") &&
@@ -241,14 +232,14 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    //check for a win - more is when this score is reached
+
     function checkForWin() {
       if (score >= 274) {
         ghosts.forEach((ghost) => clearInterval(ghost.timerId));
         document.removeEventListener("keyup", movePacman);
         pacmanVelocity.x = 0;
         pacmanVelocity.y = 0;
-        //display you won screen and refresh after 3s to rest game
+    
         document.getElementById("you-won-screen").style.display = "flex";
         setTimeout(function () {
           window.location.reload();
