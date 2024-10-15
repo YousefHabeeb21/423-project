@@ -157,6 +157,17 @@ h2 {
   display: none;
 }
 
+#pause-screen {
+  align-items: center;
+  color: white;
+  font-size: 3rem;  
+  justify-content: center;
+  text-align: center;  
+  display: none; 
+  flex-direction: column;  
+  padding: 20px;
+}
+
 .overlay-screen {
   position: fixed;
   width: 100%;

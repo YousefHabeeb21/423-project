@@ -1,5 +1,6 @@
 import { subscriptionKey, region } from './config.js'; 
 
+
 document.addEventListener("DOMContentLoaded", () => {
   const scoreDisplay = document.getElementById("score");
   const width = 28;
@@ -36,11 +37,7 @@ document.addEventListener("DOMContentLoaded", () => {
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
   ];
 
-  // 0 - pac-dots
-  // 1 - wall
-  // 2 - ghost-lair
-  // 3 - power-pellet
-  // 4 - empty
+
 
   const squares = [];
 
@@ -63,7 +60,12 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   createBoard();
 
+  let isPaused = false; 
+  let gameStarted = false;
+  let pacmanInterval;
+  let isMoving = false;
   let pacmanCurrentIndex = 490;
+  let pacmanspeed = 100;
   let pacmanVelocity = {x: 0, y: 0,};
   let intendedDirection = {x: 0, y: 0,};
   squares[pacmanCurrentIndex].classList.add("pac-man");
@@ -80,28 +82,82 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   
+  // function handleVoiceCommand(command) {
+  //   command = command.toLowerCase();
+  //   if (command.includes("left")) {
+  //     intendedDirection = { x: -1, y: 0 };
+  //   } if (command.includes("right")) {
+  //     intendedDirection = { x: 1, y: 0 };
+  //   } if (command.includes("up")) {
+  //     intendedDirection = { x: 0, y: -1 };
+  //   } if (command.includes("down")) {
+  //     intendedDirection = { x: 0, y: 1 };
+  //   } else if (command.includes("start")) {
+  //     startGame();
+  //   }
+  // }
   function handleVoiceCommand(command) {
     command = command.toLowerCase();
-    if (command.includes("left")) {
-      intendedDirection = { x: -1, y: 0 };
-    } else if (command.includes("right")) {
-      intendedDirection = { x: 1, y: 0 };
-    } else if (command.includes("up")) {
-      intendedDirection = { x: 0, y: -1 };
-    } else if (command.includes("down")) {
-      intendedDirection = { x: 0, y: 1 };
-    } else if (command.includes("start")) {
-      startGame();
+    const commands = command.split(" "); 
+    
+    commands.forEach((cmd) => {
+      if (cmd.includes("left")) {
+        isMoving = true;
+        intendedDirection = { x: -1, y: 0 };
+      } if (cmd.includes("right")) {
+        isMoving = true;
+        intendedDirection = { x: 1, y: 0 };
+      } if (cmd.includes("north") || cmd.includes("up")) {
+        isMoving = true;
+        intendedDirection = { x: 0, y: -1 };
+      } if (cmd.includes("south") || cmd.includes("down")) {
+        isMoving = true;
+        intendedDirection = { x: 0, y: 1 };
+      } if (cmd.includes("stop")) {
+        isMoving = false;
+       
+      } else if (cmd.includes("start")) {
+          if (!gameStarted){
+            startGame();
+          }
+      }
+      else if (cmd.includes("pause")) {
+        togglePause(0);
+      } else if (cmd.includes("continue")) {
+        togglePause(1);
+      }
+    });
+  }
+  
+
+
+  function togglePause(identifier) {
+    if (identifier === 0){ 
+      isPaused = true;
+    }
+    else if (identifier === 1){
+    isPaused = false;
+  }
+    // const pauseScreen = document.getElementById("pause-screen");
+  
+    if (isPaused) {
+      document.getElementById("pause-screen").style.display = "flex";  
+      console.log("Game Paused");
+    } else if (!isPaused) {
+      pauseScreen.style.display = "none";  
+      console.log("Game Resumed");
     }
   }
+  
 
-
-    function movePacman() {
-      setInterval(() => {
+  function movePacman() {
+    if (pacmanInterval) clearInterval(pacmanInterval);
+  
+    pacmanInterval = setInterval(() => {
+      if (!isPaused && isMoving) {  
         const nextIndex = pacmanCurrentIndex + pacmanVelocity.y * width + pacmanVelocity.x;
         const intendedNextIndex = pacmanCurrentIndex + intendedDirection.y * width + intendedDirection.x;
-
-        
+    
         if (canMoveTo(intendedNextIndex)) {
           pacmanVelocity = { ...intendedDirection }; 
           squares[pacmanCurrentIndex].classList.remove("pac-man");
@@ -110,14 +166,17 @@ document.addEventListener("DOMContentLoaded", () => {
           squares[pacmanCurrentIndex].classList.remove("pac-man");
           pacmanCurrentIndex = nextIndex; 
         }
-
+    
         squares[pacmanCurrentIndex].classList.add("pac-man");
-
+    
         pacDotEaten();
         powerPelletEaten();
         checkForGameOver();
-      }, 100);
-    }
+      }
+    }, pacmanspeed);
+  }
+  
+  
 
 
     function pacDotEaten() {
@@ -163,10 +222,10 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     var ghosts = [
-      new Ghost("blinky", 348, 100),
+      new Ghost("blinky", 348, 400),
       new Ghost("stinky", 376, 400),
       new Ghost("inky", 351, 300),
-      new Ghost("clyde", 379, 200),
+      new Ghost("clyde", 379, 300),
     ];
 
     ghosts.forEach((ghost) => {
@@ -178,39 +237,43 @@ document.addEventListener("DOMContentLoaded", () => {
       const directions = [-1, +1, width, -width];
       let direction = directions[Math.floor(Math.random() * directions.length)];
   
+      if (ghost.timerId) clearInterval(ghost.timerId); 
       ghost.timerId = setInterval(function () {
+        if(!isPaused){
         //if the next square your ghost is going to go to does not have a ghost and does not have a wall
-        if (
-          !squares[ghost.currentIndex + direction].classList.contains("ghost") &&
-          !squares[ghost.currentIndex + direction].classList.contains("wall")
-        ) {
-          //remove the ghosts classes
-          squares[ghost.currentIndex].classList.remove(ghost.className);
-          squares[ghost.currentIndex].classList.remove("ghost", "scared-ghost");
-          //move into that space
-          ghost.currentIndex += direction;
-          squares[ghost.currentIndex].classList.add(ghost.className, "ghost");
-          //else find a new random direction to go in
-        } else direction = directions[Math.floor(Math.random() * directions.length)];
-  
-        //if the ghost is currently scared
-        if (ghost.isScared) {
-          squares[ghost.currentIndex].classList.add("scared-ghost");
+          if (
+            !squares[ghost.currentIndex + direction].classList.contains("ghost") &&
+            !squares[ghost.currentIndex + direction].classList.contains("wall")
+          ) {
+            //remove the ghosts classes
+            squares[ghost.currentIndex].classList.remove(ghost.className);
+            squares[ghost.currentIndex].classList.remove("ghost", "scared-ghost");
+            //move into that space
+            ghost.currentIndex += direction;
+            squares[ghost.currentIndex].classList.add(ghost.className, "ghost");
+            //else find a new random direction to go in
+          } else direction = directions[Math.floor(Math.random() * directions.length)];
+    
+          //if the ghost is currently scared
+          if (ghost.isScared) {
+            squares[ghost.currentIndex].classList.add("scared-ghost");
+          }
+    
+          if (
+            ghost.isScared &&
+            squares[ghost.currentIndex].classList.contains("pac-man")
+          ) {
+            squares[ghost.currentIndex].classList.remove(
+              ghost.className,
+              "ghost",
+              "scared-ghost"
+            );
+            ghost.currentIndex = ghost.startIndex;
+            squares[ghost.currentIndex].classList.add(ghost.className, "ghost");
+          }
+        
+          checkForGameOver();
         }
-  
-        if (
-          ghost.isScared &&
-          squares[ghost.currentIndex].classList.contains("pac-man")
-        ) {
-          squares[ghost.currentIndex].classList.remove(
-            ghost.className,
-            "ghost",
-            "scared-ghost"
-          );
-          ghost.currentIndex = ghost.startIndex;
-          squares[ghost.currentIndex].classList.add(ghost.className, "ghost");
-        }
-        checkForGameOver();
       }, ghost.speed);
     }
 
@@ -220,11 +283,14 @@ document.addEventListener("DOMContentLoaded", () => {
         squares[pacmanCurrentIndex].classList.contains("ghost") &&
         !squares[pacmanCurrentIndex].classList.contains("scared-ghost")
       ) {
+
+        squares[pacmanCurrentIndex].classList.remove("pac-man");
+
         ghosts.forEach((ghost) => clearInterval(ghost.timerId));
         document.removeEventListener("keyup", movePacman);
         pacmanVelocity.x = 0;
         pacmanVelocity.y = 0;
-        //display game over screen and refresh after 3s to rest game
+
         document.getElementById("game-over-screen").style.display = "flex";
         setTimeout(function () {
           window.location.reload();
@@ -248,7 +314,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function startGame(event) {
+      gameStarted = true;
       document.getElementById("start-screen").style.display = "none";
+      isMoving = true;
       movePacman();
       ghosts.forEach((ghost) => moveGhost(ghost));
     }
@@ -266,14 +334,17 @@ document.addEventListener("DOMContentLoaded", () => {
     const speechConfig = SpeechSDK.SpeechConfig.fromSubscription(subscriptionKey, region);
 
     speechConfig.speechRecognitionLanguage = "en-US"; 
+    speechConfig.setProperty(SpeechSDK.PropertyId.SpeechServiceConnection_RecoLanguage, "en-US");
+
 
     const audioConfig = SpeechSDK.AudioConfig.fromDefaultMicrophoneInput();
 
     const recognizer = new SpeechSDK.SpeechRecognizer(speechConfig, audioConfig);
 
-    recognizer.recognized = (s, e) => {
-      if (e.result.reason === SpeechSDK.ResultReason.RecognizedSpeech) {
+    recognizer.recognizing = (s, e) => {
+      if (e.result.reason === SpeechSDK.ResultReason.RecognizingSpeech) {
         handleVoiceCommand(e.result.text); 
+        console.log(e.result.text);
       } else if (e.result.reason === SpeechSDK.ResultReason.NoMatch) {
         console.log("No speech recognized.");
       }
