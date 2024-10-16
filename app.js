@@ -393,7 +393,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
     function checkForWin() {
-      if (score >= 274) {
+      if (score >= 280) {
         ghosts.forEach((ghost) => clearInterval(ghost.timerId));
         document.removeEventListener("keyup", movePacman);
         pacmanVelocity.x = 0;
