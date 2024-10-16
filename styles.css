@@ -15,23 +15,46 @@ body {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  
+}
+h1, h2, span {
+  color: #fff;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+}
+
+.life-bar {
+  display:none;
+  justify-content: left;
+  align-items: left;
+  position: absolute; 
+  top: 100px; 
+  left: 10px;
+}
+
+.heart {
+  width: auto; 
+  height: 60px;
+  /* margin: 0 5px; */
 }
 
 .game-container {
   width: 100%;
   height: 100vh;
+  margin-top: 100px;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   justify-content: space-evenly;
-  align-items: center;
+  align-items:center;
 }
 
+
 .grid {
-  display: flex;
-  flex-wrap: wrap;
-  width: 560px;
-  height: 560px;
-  border: 0.2px solid rgb(1, 17, 17);
+  display: grid;
+  grid-template-columns: repeat(28, 27px); 
+  grid-template-rows: repeat(35, 23px);    
+  gap: 0px;  
+  background-color: #000;
+  margin-left: 100px;
 }
 
 .grid div {
@@ -41,7 +64,7 @@ body {
 
 .power-pellet {
   background-color: rgb(14, 233, 14);
-  border: solid black 4px;
+  border: solid black 2px;
   box-sizing: border-box;
   border-radius: 10px;
 }
@@ -89,7 +112,10 @@ body {
 }
 
 .wall {
-  background-color: rgb(8, 14, 102);
+  background-color: #333369; /* Bright blue for walls */
+  border: solid 3px #aa009f; /* Darker blue border to give depth */
+  border-radius: 16px; /* Rounded corners for a smoother look */
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5); /* Shadow for depth */
   
 }
 
@@ -104,6 +130,7 @@ h2 {
   text-align: center;
 }
 
+
 .low-score {
   color: red;
 }
@@ -113,7 +140,7 @@ h2 {
 }
 
 .high-score {
-  color: red;
+  color: rgb(0, 255, 106);
 }
 
 #start-screen {
@@ -148,6 +175,18 @@ h2 {
   display: none;
 }
 
+#round-loss-screen{
+  align-items: center;
+  color: rgb(32, 43, 196);
+  font-size: 4rem;
+  text-decoration: dashed;
+  text-align: center;
+  
+  justify-content: center;
+  animation: blink 0.8s infinite;
+  display: none;
+}
+
 #you-won-screen {
   align-items: center;
   color: #0bf117;
@@ -160,19 +199,19 @@ h2 {
 #pause-screen {
   align-items: center;
   color: white;
-  font-size: 3rem;  
+  font-size: 2rem;  
   justify-content: center;
   text-align: center;  
   display: none; 
-  flex-direction: column;  
-  padding: 20px;
-}
+  flex-direction: column; 
+  margin-top: 800px;
+  }
 
 .overlay-screen {
-  position: fixed;
+  position: absolute; 
   width: 100%;
   height: 100vh;
-  display: flex;
+  display:flex;
 }
 
 @keyframes colours {

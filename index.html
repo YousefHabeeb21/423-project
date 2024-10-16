@@ -13,23 +13,35 @@
   <body>
     <div class="overlay-screen" id="start-screen">
       <h1>PACMAN</h1>
-      <h2 id="start-msg">Click "Start" or say "START" to start</h2>
+      <h2 id="start-msg">Say "START" to start the game!</h2>
       <h2>Good Luck!</h2>
     </div>
-    <div class="game-container">
+
+    <div class="game-container" id="game">
       <div class="grid"></div>
       <h2>Score:<span id="score">0</span></h2>
     </div>
+    
     <div class="overlay-screen" id="game-over-screen">
       <span>GAME OVER!</span>
     </div>
+    
+    <div class="overlay-screen" id="round-loss-screen">
+      <span>You Just lost a Life!</span>
+    </div>
+
     <div class="overlay-screen" id="you-won-screen">
       <span>YOU WON!</span>
     </div>
 
     <div class="overlay-screen" id="pause-screen">
       <h2>Game Paused</h2>
-      <h3>Say "Resume" to continue the game</h3>
+      <h3>Say "continue" to continue the game</h3>
+    </div>
+    <div class="life-bar" id="health">
+      <img src="heart.png" id="heart1" class="heart" alt="Heart">
+      <img src="heart.png" id="heart2" class="heart" alt="Heart">
+      <img src="heart.png" id="heart3" class="heart" alt="Heart">
     </div>
     
   </body>
