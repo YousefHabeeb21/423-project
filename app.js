@@ -3,11 +3,12 @@ import { subscriptionKey, region } from './config.js';
 
 document.addEventListener("DOMContentLoaded", () => {
   const scoreDisplay = document.getElementById("score");
+  const startPrompt = document.getElementById("quick-start");
   const width = 28;
   let score = 0;
   const grid = document.querySelector(".grid");
   const layout = [
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
     1, 0, 0, 0, 0, 1, 1, 3, 0, 0, 0, 1, 1, 1, 5, 1, 1, 1, 1, 0, 0, 0, 0, 0, 3, 0, 0, 1,
     1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1,
     1, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1,
@@ -34,7 +35,7 @@ document.addEventListener("DOMContentLoaded", () => {
     1, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1,
     1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1,
     1, 0, 0, 0, 0, 1, 1, 3, 0, 0, 0, 1, 1, 1, 5, 1, 1, 1, 1, 0, 0, 0, 0, 0, 3, 0, 0, 1,
-    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
+    1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
   ];
   
 
@@ -43,14 +44,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const squares = [];
 
-  const directions = [
-    ['left', 'west', 'westward']
-    ['right', 'east'],
-    ['up', 'north', 'top'],
-    ['down', 'south', 'bottom']
-    // general directions
-    ['straight', 'forward', 'ahead']
-  ];  
 
   function createBoard() {
     for (let i = 0; i < layout.length; i++) {
@@ -131,6 +124,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
   
 
+  function getHelp(identifier) {
+    if (identifier === 0) {
+      isPaused = true;
+      document.getElementById("pause-screen").style.display = "none";
+      document.getElementById("help-screen").style.display = "flex";
+      document.getElementById("screen").style.display = "none";
+    } 
+    else if (identifier === 1) {
+      document.getElementById("help-screen").style.display = "flex";
+    }
+
+  }
+ 
+
+
+
 
   function handleVoiceCommand(command) {
     command = command.toLowerCase();
@@ -151,7 +160,6 @@ document.addEventListener("DOMContentLoaded", () => {
         intendedDirection = { x: 0, y: 1 };
       } if (cmd.includes("stop")) {
         isMoving = false;
-       
       } if (cmd.includes("start")) {
           if (!gameStarted){
             startGame();
@@ -166,6 +174,11 @@ document.addEventListener("DOMContentLoaded", () => {
       if (cmd.includes("restart") || cmd.includes("reset")) {
         restartGame(); 
       }
+      if (cmd.includes("help") || cmd.includes("instructions")) {
+        help = true
+        if(gameStarted) getHelp(0);
+        else getHelp(1);
+      }
     });
   }
   
@@ -179,16 +192,17 @@ document.addEventListener("DOMContentLoaded", () => {
       isPaused = false;
     }
     if (isPaused) {
-      document.getElementById("game").style.display = "none";
+      document.getElementById("screen").style.display = "none";
+      document.getElementById("help-screen").style.display = "none";
       document.getElementById("pause-screen").style.display = "flex";  
-      document.getElementById("health").style.display = "none";
       document.getElementById("health").style.display = "flex";
+      
 
       console.log("Game Paused");
     } else if (!isPaused) {
-      document.getElementById("health").style.display = "none";
       document.getElementById("health").style.display = "grid";
-      document.getElementById("game").style.display = "flex";
+      document.getElementById("help-screen").style.display = "none";
+      document.getElementById("screen").style.display = "flex";
       document.getElementById("pause-screen").style.display = "none";
       console.log("Game Resumed");
     }
@@ -197,10 +211,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   function canMoveTo(newIndex) {
-    return (
-      !squares[newIndex].classList.contains("wall") &&
-      !squares[newIndex].classList.contains("ghost-lair")
-    );
+    if (squares[newIndex].classList.contains("wall") || squares[newIndex].classList.contains("ghost-lair")) {
+      return false;
+    }
+    return true;
   }
 
   function movePacman() {
@@ -208,6 +222,12 @@ document.addEventListener("DOMContentLoaded", () => {
   
     pacmanInterval = setInterval(() => {
       if (!isPaused && isMoving) {  
+        if(squares[pacmanCurrentIndex].classList.contains("safe-zone")){
+          document.getElementById("game-message").style.display = "flex";
+          document.getElementById("safe-zone").style.display = "none";
+        }else{
+          document.getElementById("game-message").style.display = "none";
+        }
         const nextIndex = pacmanCurrentIndex + pacmanVelocity.y * width + pacmanVelocity.x;
         const intendedNextIndex = pacmanCurrentIndex + intendedDirection.y * width + intendedDirection.x;
     
@@ -330,6 +350,7 @@ document.addEventListener("DOMContentLoaded", () => {
     
         document.getElementById("round-loss-screen").style.display = "flex";
         squares[pacmanCurrentIndex].classList.remove("pac-man");
+        
 
         isMoving = false; 
     
@@ -406,9 +427,21 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
+
+    function updateQuickstartMessage() {
+      const quickstart = document.getElementById("quickstart");
+      if (gameStarted) {
+        quickstart.innerText = 'Say "CONTINUE" to resume the game!';
+      } else {
+        quickstart.innerText = 'When you\'re ready, say "START" to begin the game!';
+      }
+    }
+
     function startGame(event) {
       gameStarted = true;
+      updateQuickstartMessage();
       document.getElementById("start-screen").style.display = "none";
+      document.getElementById("help-screen").style.display = "none";
       document.getElementById("health").style.display = "grid";
       isMoving = true;
       movePacman();
@@ -419,7 +452,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.addEventListener("click", () => {
       initializeMicrophone();
-      startGame();
+      // startGame();
+      togglePause(1);
     });
 
   

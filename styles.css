@@ -6,6 +6,8 @@
 * {
   margin: 0;
   padding: 0;
+  box-sizing: border-box;
+
 }
 
 body {
@@ -14,10 +16,11 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  overflow: hidden;
+  /* overflow: hidden; */
   align-items: center;
   height: 100vh;
   width: 100vw;
+  
   
 }
 h1, h2, span {
@@ -27,29 +30,33 @@ h1, h2, span {
 h3{
   color: #fff;
   text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
-  margin-left: 100px;
+  
 }
+
+
 
 .life-bar {
   display:none;
   position: absolute; 
-  top: 100px; 
-  left: 10px;
+  top:100px;
+  left:50px;
+  
 }
 
 .heart {
   width: auto; 
   height: 60px;
-  /* margin: 0 5px; */
+  
 }
 
+
 .game-container {
-  width: 90vw; 
-  height: 90vh;
-  display: flex;
+  position: absolute;
+  top: 0%; 
+  left: 10%; 
   justify-content: center;
   align-items: center;
-  position: fixed;
+  /* display: flex; */
 }
 
 
@@ -66,6 +73,9 @@ h3{
 .grid div {
   width: 27px;
   height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .power-pellet {
@@ -78,10 +88,54 @@ h3{
 .pac-dot {
   background-color: yellow;
   border: solid black 11px;
-  box-sizing: border-box;
   border-radius: 20px;
-
 }
+
+
+.info-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+
+
+.safe-zone {
+  background: transparent;
+  border: solid rgb(77, 151, 235) 3px;
+  border-radius: 20px;
+  transform: translate(-1px, 0px);
+  /* z-index: 0; */
+  /* display: flex; */
+}
+
+
+.score-section{
+  position: absolute;
+  top: 60%; 
+  left: 70%; 
+  justify-content: center;
+  align-items: center;
+  display: flex;
+}
+.safe-msg {
+  position: absolute; 
+  color: tomato;
+  top: 30%; 
+  left: 70%; 
+  background-color: rgba(0, 0, 0, 0.8);
+  color: white;
+  border-radius: 10px;
+  font-size: 18px;
+  text-align: center;
+  display: none;
+
+} 
+
+
 
 .blinky {
   background-image: url('green.jpeg');
@@ -96,8 +150,9 @@ h3{
 }
 
 .inky {
-  background-image: url('pink.webp');
+  background-image: url('mix.png');
   background-size: cover; 
+  background-color: #000;
   background-position: center;
 }
 
@@ -110,6 +165,7 @@ h3{
 .ghost {
   border: 0px;
   border-radius: 0px;
+  z-index: 1;
 }
 
 .scared-ghost {
@@ -120,24 +176,23 @@ h3{
 
 .wall {
   background-image: url('wall.jpeg');
-  background-size: cover; 
+  background-size:contain; 
   background-position: center;
   border: solid 2px #330033; 
-  border-radius: 5px;
+  border-radius: 10px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.7);
+  z-index: 1;
   
 }
 
 .pac-man {
-  background-image: url('pacman.png'); /* Ensure the path is correct */
+  background-image: url('pacman.png'); 
   background-size: cover; 
   background-position: center;
+  display: flex;
+  /* z-index: 1; */
 }
-h2 {
-  color: white;
-  font-weight: normal;
-  text-align: center;
-}
+
 
 
 .low-score {
@@ -184,6 +239,7 @@ h2 {
   display: none;
 }
 
+
 #round-loss-screen{
   align-items: center;
   color: rgb(32, 43, 196);
@@ -213,12 +269,54 @@ h2 {
   text-align: center;  
   display: none; 
   flex-direction: column; 
-  margin-top: 800px;
   }
+  
+
+  #pause-screen p1 {
+    position: absolute;
+    top: 10%; 
+    left: 30%;
+    font-size: 20px;
+    text-shadow: 2px 2px 5px rgba(165, 17, 17, 0.7);
+    font-weight: bold;
+    text-align: center;
+  }
+
+
+  #help-screen {
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    height: 100vh;
+    width: 100vw;
+    background-color: black;
+    padding-top: 50px;
+    overflow: hidden;
+  }
+
+
+  #typewriter1 {
+    /* width: 60%;  */
+    color: #48ebca;
+    font-size: 20px;
+    line-height: 2rem;
+    text-align: left;
+    margin-top: 80px;  
+  }
+  
+ 
+  #help-title {
+    font-size: 3rem;
+    color: white;
+    text-align: center;
+    margin-bottom: 30px;
+    text-decoration: underline;
+  }
+
 
 .overlay-screen {
   position: absolute; 
-
   width: 100%;
   height: 110vh;
   top: 0;
@@ -261,4 +359,66 @@ h2 {
   99% {
     opacity: 0;
   }
+}
+
+
+.line {
+  display: inline-block; 
+  overflow: hidden;
+  white-space: nowrap;
+  color: rgb(0, 255, 200);
+  width: 0; 
+}
+
+@keyframes typing {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%; 
+  }
+}
+
+
+.line1 {
+  animation: typing 1s steps(30, end) forwards;
+}
+.line2 {
+  animation: typing 1s steps(30, end) forwards 1s;
+}
+.line3 {
+  animation: typing 1s steps(30, end) forwards 2s;
+}
+.line4 {
+  animation: typing 1s steps(30, end) forwards 3s;
+}
+.line5 {
+  animation: typing 1s steps(30, end) forwards 4s;
+}
+.line6 {
+  animation: typing 1s steps(30, end) forwards 5s;
+}
+.line7 {
+  animation: typing 1s steps(30, end) forwards 6s;
+}
+
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(40px); 
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0); 
+  }
+}
+
+#quickstart {
+  color: white;
+  font-size: 2rem;
+  text-align: center;
+  margin-top: 70px;
+  opacity: 0; 
+  animation: fadeInUp 2s ease-in-out 5s forwards;
 }
