@@ -16,31 +16,30 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  /* overflow: hidden; */
+  min-height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  
+  
+}
+h1, h2, h3, span {
+  color: #fff;
+  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
+  /* text-align: center; */
   align-items: center;
-  height: 100vh;
-  width: 100vw;
-  
-  
+  justify-content: right;
 }
-h1, h2, span {
-  color: #fff;
-  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
-}
-h3{
-  color: #fff;
-  text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.7);
-  
-}
+
 
 
 
 .life-bar {
-  display:none;
-  position: absolute; 
-  top:100px;
-  left:50px;
-  
+  display: flex;
+  gap: 10px; /* Space between hearts */
+  flex-shrink: 0; /* Prevent the life bar from shrinking */
+  align-items: center;
+  position: sticky;
+  top: 150px; /* Keeps it always near the top */
 }
 
 .heart {
@@ -50,20 +49,35 @@ h3{
 }
 
 
-.game-container {
-  position: absolute;
-  top: 0%; 
-  left: 10%; 
-  justify-content: center;
-  align-items: center;
-  /* display: flex; */
+.container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content:center;
+  /* align-items: left; */
+  /* gap: 200px; */
+  max-width: 70%;
+  /* margin: 0 auto; */
+  /* padding: 100px; */
+}
+
+
+.game-wrapper {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 40px; /* Ensures space between life bar and game container */
+  /* width: 100%; */
+  /* max-width: 1200px; */
+  /* margin: 0 auto; */
+  padding: 20px;
 }
 
 
 .grid {
   display: grid;
-  grid-template-columns: repeat(28, 28px); 
-  grid-template-rows: repeat(35, 26px);    
+  grid-template-columns: repeat(28, 30px); 
+  grid-template-rows: repeat(35, 27px);    
   gap: 0px;  
   background-color: #000;
   margin-top: 130px;
@@ -71,8 +85,8 @@ h3{
 }
 
 .grid div {
-  width: 27px;
-  height: 30px;
+  width: 30px;
+  height: 33px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -80,14 +94,16 @@ h3{
 
 .power-pellet {
   background-color: rgb(14, 233, 14);
-  border: solid black 6px;
+  border: solid black 2px;
   box-sizing: border-box;
-  border-radius: 10px;
+  height: auto;
+  border-radius: 30px;
+  z-index: 1;
 }
 
 .pac-dot {
   background-color: yellow;
-  border: solid black 11px;
+  border: solid black 12px;
   border-radius: 20px;
 }
 
@@ -95,11 +111,13 @@ h3{
 .info-panel {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  gap: 10px;
   align-items: center;
-  padding: 20px;
+  padding: 10px;
   background-color: rgba(0, 0, 0, 0.8);
+  border-radius: 10px;
 }
+
 
 
 
@@ -108,8 +126,7 @@ h3{
   border: solid rgb(77, 151, 235) 3px;
   border-radius: 20px;
   transform: translate(-1px, 0px);
-  /* z-index: 0; */
-  /* display: flex; */
+  
 }
 
 
@@ -119,7 +136,7 @@ h3{
   left: 70%; 
   justify-content: center;
   align-items: center;
-  display: flex;
+  /* display: flex; */
 }
 .safe-msg {
   position: absolute; 
@@ -190,7 +207,7 @@ h3{
   background-size: cover; 
   background-position: center;
   display: flex;
-  /* z-index: 1; */
+  z-index: 1;
 }
 
 
@@ -287,7 +304,7 @@ h3{
     display: none;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
     height: 100vh;
     width: 100vw;
     background-color: black;
@@ -419,6 +436,7 @@ h3{
   font-size: 2rem;
   text-align: center;
   margin-top: 70px;
+  padding: 120px;
   opacity: 0; 
   animation: fadeInUp 2s ease-in-out 5s forwards;
 }

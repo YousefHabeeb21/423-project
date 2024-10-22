@@ -3,7 +3,6 @@ import { subscriptionKey, region } from './config.js';
 
 document.addEventListener("DOMContentLoaded", () => {
   const scoreDisplay = document.getElementById("score");
-  const startPrompt = document.getElementById("quick-start");
   const width = 28;
   let score = 0;
   const grid = document.querySelector(".grid");
@@ -175,7 +174,6 @@ document.addEventListener("DOMContentLoaded", () => {
         restartGame(); 
       }
       if (cmd.includes("help") || cmd.includes("instructions")) {
-        help = true
         if(gameStarted) getHelp(0);
         else getHelp(1);
       }
@@ -224,7 +222,6 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!isPaused && isMoving) {  
         if(squares[pacmanCurrentIndex].classList.contains("safe-zone")){
           document.getElementById("game-message").style.display = "flex";
-          document.getElementById("safe-zone").style.display = "none";
         }else{
           document.getElementById("game-message").style.display = "none";
         }

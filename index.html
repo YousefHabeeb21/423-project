@@ -14,6 +14,7 @@
 
     <div class="overlay-screen" id="start-screen">
       <h1>PACMAN</h1>
+      <h2 id="start-msg">Say "HELP" for instructions!</h2>
       <h2 id="start-msg">Say "START" to start the game!</h2>
       <h2>Good Luck!</h2>
     </div>
@@ -22,31 +23,30 @@
 
     <div class="container" id="screen">
 
-      <div class="game-container">
-        <div class="grid"></div>
+      <div class="game-wrapper">
+        <div class="life-bar" id="health">
+          <img src="heart.png" id="heart1" class="heart" alt="Heart">
+          <img src="heart.png" id="heart2" class="heart" alt="Heart">
+          <img src="heart.png" id="heart3" class="heart" alt="Heart">
+        </div>
+    
+        <div class="game-container">
+          <div class="grid"></div>
+        </div>
       </div>
 
-      <div class="info-panel">
+        <div class="info-panel">
 
-          <div id="game-message" class="safe-msg">
-            <p>You are in the safe zone!</p>
+            <div id="game-message" class="safe-msg">
+              <p>You are in the safe zone!</p>
+            </div>
+            <div class="score-section">
+              <h3>Score: <span id="score">0</span></h3>
+            </div>
           </div>
-          <div class="score-section">
-            <h3>Score: <span id="score">0</span></h3>
-          </div>
-        </div>
 
     </div>
     
-    <!-- <div class="game-container" id="game">
-      <div class="grid"></div>
-      <h3>Score:<span id="score">0</span></h3>
-    </div>
-    
-
-    <div id="game-message" class="safe-msg">
-      <p>You are in the safe zone!</p>
-    </div> -->
 
     <div class="overlay-screen" id="game-over-screen">
       <span>GAME OVER!</span>
@@ -62,10 +62,7 @@
 
 
     <div class="overlay-screen" id="pause-screen">
-      <!-- <p1 id="typewriter"> Need Help? Just ask for it!!
-      <br>
-      <br> Say "help" to get the instructions.
-      </p1> -->
+    
       <p1 id="typewriter">
         <span class="line line1">Need Help? Just ask for it!!</span><br><br>
         <span class="line line2">Say "help" to get the instructions.</span>
@@ -88,14 +85,14 @@
         <span class="line line6">5. Say "PAUSE" to pause the game.</span><br><br>
         <span class="line line7">6. Say "CONTINUE" to continue the game.</span>
       </p>
-      <p id="quickstart">When you're ready, say "START" to begin the game!</p>
+      <p id="quickstart">When you're ready, say "START" or idicate that you want to begin the game!</p>
     </div>
   
-    <div class="life-bar" id="health">
+    <!-- <div class="life-bar" id="health">
       <img src="heart.png" id="heart1" class="heart" alt="Heart">
       <img src="heart.png" id="heart2" class="heart" alt="Heart">
       <img src="heart.png" id="heart3" class="heart" alt="Heart">
-    </div>
+    </div> -->
     
   </body>
 </html>
