@@ -8,7 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const grid = document.querySelector(".grid");
   const layout = [
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-    1, 0, 0, 0, 0, 1, 1, 3, 0, 0, 0, 1, 1, 1, 5, 1, 1, 1, 1, 0, 0, 0, 0, 0, 3, 0, 0, 1,
+    1, 0, 0, 0, 0, 1, 1, 3, 0, 0, 0, 5, 5, 5, 5, 5, 5, 5, 5, 0, 0, 0, 0, 0, 3, 0, 0, 1,
     1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1,
     1, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1,
     1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1,
@@ -33,7 +33,7 @@ document.addEventListener("DOMContentLoaded", () => {
     1, 0, 1, 1, 0, 1, 1, 1, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1,
     1, 0, 1, 1, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1, 1, 1, 1, 0, 1, 1, 0, 1, 1, 1, 0, 1,
     1, 0, 1, 1, 0, 1, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 1, 1, 1, 0, 1,
-    1, 0, 0, 0, 0, 1, 1, 3, 0, 0, 0, 1, 1, 1, 5, 1, 1, 1, 1, 0, 0, 0, 0, 0, 3, 0, 0, 1,
+    1, 0, 0, 0, 0, 1, 1, 3, 0, 0, 0, 5, 5, 5, 5, 5, 5, 5, 5, 0, 0, 0, 0, 0, 3, 0, 0, 1,
     1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1
   ];
   
@@ -68,6 +68,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
+  
+  let lastdirection;
   let lives = 3; 
   let isPaused = false; 
   let gameStarted = false;
@@ -83,6 +85,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   function restartGame(resetLives) {
+    const cmdElement = document.getElementById("cmd");
+    cmdElement.style.display = "none";
     score = 0;
     if(resetLives){ 
       lives = 3; 
@@ -95,6 +99,8 @@ document.addEventListener("DOMContentLoaded", () => {
     intendedDirection = {x: 0, y: 0};
     isMoving = false;
     isPaused = false;
+
+    if (pacmanInterval) {clearInterval(pacmanInterval); }
   
     grid.innerHTML = "";
     squares.length = 0; 
@@ -123,6 +129,76 @@ document.addEventListener("DOMContentLoaded", () => {
 
   
 
+
+  
+ 
+
+
+  function displayCmd(cmd) {
+    const cmdElement = document.getElementById("cmd");
+    cmdElement.innerHTML = cmd;  
+    cmdElement.style.display = "inline"; 
+  }
+
+  function handleVoiceCommand(command) {
+    command = command.toLowerCase();
+    const commands = command.split(" "); 
+    
+    commands.forEach((cmd) => {
+      if (cmd.includes("left") || cmd.includes("west")) {
+        isMoving = true;
+        intendedDirection = { x: -1, y: 0 };
+        displayCmd(cmd)
+      } 
+      if (cmd.includes("right") || cmd.includes("east")) {
+        isMoving = true;
+        intendedDirection = { x: 1, y: 0 };
+        displayCmd(cmd)
+      } 
+      if (cmd.includes("north") || cmd.includes("up") ) {
+        isMoving = true;
+        intendedDirection = { x: 0, y: -1 };
+        displayCmd(cmd)
+      } 
+      if (cmd.includes("south") || cmd.includes("down")) {
+        isMoving = true;
+        intendedDirection = { x: 0, y: 1 };
+        displayCmd(cmd)
+      } 
+      if (cmd.includes("stop") || cmd.includes("halt")) {
+        displayCmd(cmd)
+        lastdirection = intendedDirection;
+        isMoving = false;
+      } 
+      if (cmd.includes("go") || cmd.includes("keep")) {
+        displayCmd(cmd)
+        if(!isMoving){
+          isMoving = true;
+          intendedDirection = lastdirection;
+        }
+      }
+      if ((cmd.includes("start") || cmd.includes("begin"))  && !gameStarted) {
+            startGame();
+      }
+      if (cmd.includes("pause") && gameStarted) {
+        // displayCmd(cmd)
+        togglePause(0);
+      } 
+      if ((cmd.includes("continue") || cmd.includes("resume")) && gameStarted) {
+        displayCmd(cmd)
+         togglePause(1);
+      }
+      if (cmd.includes("restart") || cmd.includes("reset")) {
+        restartGame(true); 
+      }
+      if (cmd.includes("help") || cmd.includes("instructions") || cmd.includes("directions")) {
+        if(gameStarted) getHelp(0);
+        else getHelp(1);
+      }
+    });
+  }
+  
+
   function getHelp(identifier) {
     if (identifier === 0) {
       isPaused = true;
@@ -135,52 +211,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
   }
- 
-
-
-
-
-  function handleVoiceCommand(command) {
-    command = command.toLowerCase();
-    const commands = command.split(" "); 
-    
-    commands.forEach((cmd) => {
-      if (cmd.includes("left")) {
-        isMoving = true;
-        intendedDirection = { x: -1, y: 0 };
-      } if (cmd.includes("right")) {
-        isMoving = true;
-        intendedDirection = { x: 1, y: 0 };
-      } if (cmd.includes("north") || cmd.includes("up")) {
-        isMoving = true;
-        intendedDirection = { x: 0, y: -1 };
-      } if (cmd.includes("south") || cmd.includes("down")) {
-        isMoving = true;
-        intendedDirection = { x: 0, y: 1 };
-      } if (cmd.includes("stop")) {
-        isMoving = false;
-      } if (cmd.includes("start")) {
-          if (!gameStarted){
-            startGame();
-          }
-      }
-      if (cmd.includes("pause")) {
-        if (gameStarted) togglePause(0);
-      } 
-      if (cmd.includes("continue")) {
-        if (gameStarted) togglePause(1);
-      }
-      if (cmd.includes("restart") || cmd.includes("reset")) {
-        restartGame(); 
-      }
-      if (cmd.includes("help") || cmd.includes("instructions")) {
-        if(gameStarted) getHelp(0);
-        else getHelp(1);
-      }
-    });
-  }
-  
-
 
   function togglePause(identifier) {
     if (identifier === 0){ 
@@ -193,6 +223,7 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("screen").style.display = "none";
       document.getElementById("help-screen").style.display = "none";
       document.getElementById("pause-screen").style.display = "flex";  
+      document.getElementById("health").style.display = "none";
       document.getElementById("health").style.display = "flex";
       
 
@@ -339,6 +370,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     
 
+
+
    
     function loseLife() {
       if (lives > 1) {
@@ -346,11 +379,7 @@ document.addEventListener("DOMContentLoaded", () => {
         lives--;
     
         document.getElementById("round-loss-screen").style.display = "flex";
-        squares[pacmanCurrentIndex].classList.remove("pac-man");
         
-
-        isMoving = false; 
-    
         setTimeout(() => {
           document.getElementById("round-loss-screen").style.display = "none";
           restartGame(false); 
@@ -367,8 +396,6 @@ document.addEventListener("DOMContentLoaded", () => {
       document.getElementById("health").style.display = "none";
       document.getElementById("game-over-screen").style.display = "flex";
       squares[pacmanCurrentIndex].classList.remove("pac-man");
-
-      
     
       setTimeout(() => {
         restartGame(true); 
@@ -382,6 +409,10 @@ document.addEventListener("DOMContentLoaded", () => {
       !squares[pacmanCurrentIndex].classList.contains("scared-ghost")) {
 
       ghosts.forEach(ghost => clearInterval(ghost.timerId));
+      if (pacmanInterval) {
+        clearInterval(pacmanInterval); 
+      }
+      squares[pacmanCurrentIndex].classList.remove("pac-man");
       pacmanVelocity = { x: 0, y: 0 };
       isMoving = false;
 
@@ -410,6 +441,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 
+
     function checkForWin() {
       if (score >= 280) {
         ghosts.forEach((ghost) => clearInterval(ghost.timerId));
@@ -434,6 +466,8 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
+
+
     function startGame(event) {
       gameStarted = true;
       updateQuickstartMessage();
@@ -450,10 +484,12 @@ document.addEventListener("DOMContentLoaded", () => {
     document.addEventListener("click", () => {
       initializeMicrophone();
       // startGame();
-      togglePause(1);
+      // togglePause(1);
     });
 
   
+
+
 
   function initializeMicrophone() {
 

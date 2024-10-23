@@ -14,9 +14,9 @@
 
     <div class="overlay-screen" id="start-screen">
       <h1>PACMAN</h1>
-      <h2 id="start-msg">Say "HELP" for instructions!</h2>
+      <h2 id="start-tip">Say "HELP" for instructions!</h2>
       <h2 id="start-msg">Say "START" to start the game!</h2>
-      <h2>Good Luck!</h2>
+      <h2 id="good-luck"></h2id> <br><br>Good Luck!</h2>
     </div>
 
 
@@ -33,17 +33,23 @@
         <div class="game-container">
           <div class="grid"></div>
         </div>
+
       </div>
 
-        <div class="info-panel">
+      <div class="info-panel">
+
+            <div class="cmd-resp">
+              <h1> Current command: <span id="cmd">none</span> </h1>
+            </div>
 
             <div id="game-message" class="safe-msg">
               <p>You are in the safe zone!</p>
             </div>
+
             <div class="score-section">
               <h3>Score: <span id="score">0</span></h3>
             </div>
-          </div>
+      </div>
 
     </div>
     
@@ -63,7 +69,7 @@
 
     <div class="overlay-screen" id="pause-screen">
     
-      <p1 id="typewriter">
+      <p1 id="typewriter1">
         <span class="line line1">Need Help? Just ask for it!!</span><br><br>
         <span class="line line2">Say "help" to get the instructions.</span>
       </p1>
@@ -78,12 +84,13 @@
       <h1 id="help-title">How to play</h1>
       <p id="typewriter1">
         <span class="line line1">1. Use your voice to control the Pacman.</span><br><br>
-        <span class="line line2">2. Say "START" to start the game.</span><br><br>
+        <span class="line line2">2. Say "START" or "BEGIN" to idicate that you want to start the game.</span><br><br>
         <span class="line line3">3. Use a phrase that contains any directional words to move the Pacman:</span><br><br>
-        <span class="line line4">  (e.g. "Move left", "Go right", "Move up", "Go down")</span><br><br>
-        <span class="line line5">4. You can also say "STOP" to stop the Pacman from moving.</span><br><br>
-        <span class="line line6">5. Say "PAUSE" to pause the game.</span><br><br>
-        <span class="line line7">6. Say "CONTINUE" to continue the game.</span>
+        <span class="line line4">  &nbsp;&nbsp;  (e.g. "Move left", "Go east", "Move up", "Go south")</span><br><br>
+        <span class="line line5">4. You can also say "STOP" or "halt" to stop the Pacman from moving.</span><br><br>
+        <span class="line line6">5. You may also restart the game by either saying "RESTART" or "RESET"</span><br><br>
+        <span class="line line7">6. Say "PAUSE" to pause the game.</span><br><br>
+        <span class="line line8">7. Say "CONTINUE"  or "RESUME" to continue the game.</span>
       </p>
       <p id="quickstart">When you're ready, say "START" or idicate that you want to begin the game!</p>
     </div>
