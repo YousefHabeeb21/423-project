@@ -104,9 +104,11 @@ document.addEventListener("DOMContentLoaded", () => {
   
     grid.innerHTML = "";
     squares.length = 0; 
-    squares.forEach(square => {
-      square.classList.remove("pac-man", "wall", "ghost-lair", "pac-dot", "power-pellet", "ghost", "scared-ghost", "safe-zone");
-    });
+
+    //might not need these since 105 and 106 technically reset
+    // squares.forEach(square => {
+    //   square.classList.remove("pac-man", "wall", "ghost-lair", "pac-dot", "power-pellet", "ghost", "scared-ghost", "safe-zone");
+    // });
 
     createBoard();
   
@@ -185,10 +187,11 @@ document.addEventListener("DOMContentLoaded", () => {
         togglePause(0);
       } 
       if ((cmd.includes("continue") || cmd.includes("resume")) && gameStarted) {
-        displayCmd(cmd)
+        displayCmd("Resumed")
          togglePause(1);
       }
       if (cmd.includes("restart") || cmd.includes("reset")) {
+        displayCmd("Restarted")
         restartGame(true); 
       }
       if (cmd.includes("help") || cmd.includes("instructions") || cmd.includes("directions")) {
@@ -483,6 +486,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.addEventListener("click", () => {
       initializeMicrophone();
+      // @waqar and junaid dont delete these im using them to debug faster
       // startGame();
       // togglePause(1);
     });

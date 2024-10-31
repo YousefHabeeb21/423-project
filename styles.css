@@ -66,10 +66,7 @@ h1, h2, h3, span {
   flex-direction: row;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 40px; /* Ensures space between life bar and game container */
-  /* width: 100%; */
-  /* max-width: 1200px; */
-  /* margin: 0 auto; */
+  gap: 40px; 
   padding: 20px;
 }
 
