@@ -38,9 +38,6 @@ document.addEventListener("DOMContentLoaded", () => {
   ];
   
 
-  
-
-
   const squares = [];
 
 
@@ -66,9 +63,6 @@ document.addEventListener("DOMContentLoaded", () => {
   }
   createBoard();
 
-
-
-  
   let lastdirection;
   let lives = 3; 
   let isPaused = false; 
@@ -84,56 +78,60 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
+  function screensReset(){
+    document.getElementById("start-screen").style.display = "flex";
+    document.getElementById("help-screen").style.display = "none";
+    document.getElementById("health").style.display = "none";
+  }
+
+
   function restartGame(resetLives) {
     const cmdElement = document.getElementById("cmd");
     cmdElement.style.display = "none";
-    score = 0;
-    if(resetLives){ 
-      lives = 3; 
-      document.getElementById("heart1").style.display = "grid";
-      document.getElementById("heart2").style.display = "grid";
-      document.getElementById("heart3").style.display = "grid";
-    }
+  
     pacmanCurrentIndex = 574;
     pacmanVelocity = {x: 0, y: 0};
     intendedDirection = {x: 0, y: 0};
     isMoving = false;
     isPaused = false;
-
-    if (pacmanInterval) {clearInterval(pacmanInterval); }
-  
-    grid.innerHTML = "";
-    squares.length = 0; 
-
-    //might not need these since 105 and 106 technically reset
-    // squares.forEach(square => {
-    //   square.classList.remove("pac-man", "wall", "ghost-lair", "pac-dot", "power-pellet", "ghost", "scared-ghost", "safe-zone");
-    // });
-
-    createBoard();
-  
     squares[pacmanCurrentIndex].classList.add("pac-man");
+
+
     ghosts.forEach(ghost => {
       squares[ghost.currentIndex].classList.remove(ghost.className, "ghost", "scared-ghost");
       ghost.currentIndex = ghost.startIndex;
       squares[ghost.currentIndex].classList.add(ghost.className, "ghost");
     });
-  
-    scoreDisplay.innerHTML = score;
 
-    document.getElementById("game-over-screen").style.display = "none";
-    document.getElementById("round-loss-screen").style.display = "none";
-    document.getElementById("you-won-screen").style.display = "none";
+    if(resetLives){ 
+
+      gameStarted = false;
+      lives = 3; 
+      document.getElementById("heart1").style.display = "grid";
+      document.getElementById("heart2").style.display = "grid";
+      document.getElementById("heart3").style.display = "grid";
+
+      grid.innerHTML = "";
+      squares.length = 0; 
   
-    startGame();
-    console.log("Game Restarted");
+      createBoard();
+    
+      score = 0;
+      scoreDisplay.innerHTML = score;
+  
+      screensReset()
+    } 
+    else{
+
+      isMoving = true;
+      movePacman();
+      ghosts.forEach((ghost) => moveGhost(ghost));
+     
+    }
   }
 
   
 
-
-  
- 
 
 
   function displayCmd(cmd) {
@@ -401,6 +399,7 @@ document.addEventListener("DOMContentLoaded", () => {
       squares[pacmanCurrentIndex].classList.remove("pac-man");
     
       setTimeout(() => {
+        document.getElementById("game-over-screen").style.display = "none";
         restartGame(true); 
       }, 3000);
     }
@@ -471,6 +470,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 
+    
     function startGame(event) {
       gameStarted = true;
       updateQuickstartMessage();
@@ -486,7 +486,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.addEventListener("click", () => {
       initializeMicrophone();
-      // @waqar and junaid dont delete these im using them to debug faster
       // startGame();
       // togglePause(1);
     });
@@ -519,6 +518,3 @@ document.addEventListener("DOMContentLoaded", () => {
     recognizer.startContinuousRecognitionAsync();
   }
 });
-
-
-
