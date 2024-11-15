@@ -39,7 +39,6 @@ h1, h2, h3, span {
   flex-shrink: 0; 
   align-items: center;
   position: sticky;
-  top: 150px; 
 }
 
 .heart {
@@ -62,10 +61,13 @@ h1, h2, h3, span {
 
 
 .game-wrapper {
+  position: absolute;
   display: flex;
   flex-direction: row;
   align-items: flex-start;
   justify-content: space-between;
+  top:20%;  
+  left:5%;
   gap: 40px; 
   padding: 20px;
 }
@@ -76,8 +78,10 @@ h1, h2, h3, span {
   grid-template-columns: repeat(28, 30px); 
   grid-template-rows: repeat(35, 27px);    
   gap: 0px;  
+  /* top:20%;
+  left:50%; */
   background-color: #000;
-  margin-top: 130px;
+  /* margin-top: 130px; */
   /* margin-left: 100px; */
 }
 
@@ -170,7 +174,7 @@ h1, h2, h3, span {
 
 .difficulty-level {
   position: absolute;
-  top: 12%; 
+  top: 10%; 
   left: 30%; 
   background-color: rgba(0, 0, 0, 0.8);
   border-radius: 10px;
