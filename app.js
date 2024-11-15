@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
   createBoard();
-
+  let chosenDifficulty = "Medium";
   let lastdirection;
   let lives = 3; 
   let isPaused = false; 
@@ -196,6 +196,12 @@ document.addEventListener("DOMContentLoaded", () => {
         if(gameStarted) getHelp(0);
         else getHelp(1);
       }
+      if (cmd.includes("easy") || cmd.includes("medium") || cmd.includes("hard")) {
+        chosenDifficulty = cmd.charAt(0).toUpperCase() + cmd.slice(1);
+        updateDifficulty(chosenDifficulty);
+        applyDifficultySettings(chosenDifficulty);
+      }
+
     });
   }
   
@@ -328,11 +334,12 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
+    
     var ghosts = [
-      new Ghost("blinky", 348, 400),
-      new Ghost("stinky", 376, 400),
-      new Ghost("inky", 351, 300),
-      new Ghost("clyde", 379, 300),
+      new Ghost("blinky", 348, 250),
+      new Ghost("stinky", 376, 250),
+      new Ghost("inky", 351, 250),
+      new Ghost("clyde", 379, 250),
     ];
 
     ghosts.forEach((ghost) => {
@@ -469,10 +476,43 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
+    function applyDifficultySettings(level) {
+      const settings = difficultySettings[level];
+      if (settings) {
+        ghosts.forEach((ghost) => {
+          ghost.speed = settings.ghostSpeed;
+          if (ghost.timerId) {
+            clearInterval(ghost.timerId); 
+            moveGhost(ghost); 
+          }
+        });
+        console.log(`Difficulty set to ${level}. Ghost speed: ${settings.ghostSpeed}`);
+      } else {
+        console.warn(`Unknown difficulty level: ${level}`);
+      }
+    }
 
-
+    const difficultySettings = {
+      Easy: { ghostSpeed: 400 },
+      Medium: { ghostSpeed: 250 },
+      Hard: { ghostSpeed: 75 },
+    };
     
-    function startGame(event) {
+    function updateDifficulty(level) {
+      const difficultyElement = document.getElementById("difficulty");
+      difficultyElement.innerText = level;
+  
+      const colorMap = {
+        Easy: "#12b8dd",
+        Medium: "#ffcc00",
+        Hard: "#ff5722",
+      };
+      difficultyElement.style.color = colorMap[level] || "#fff";
+    }
+    
+    function startGame(event) { 
+      updateDifficulty(chosenDifficulty);
+      applyDifficultySettings(chosenDifficulty);
       gameStarted = true;
       updateQuickstartMessage();
       document.getElementById("start-screen").style.display = "none";

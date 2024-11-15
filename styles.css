@@ -168,6 +168,25 @@ h1, h2, h3, span {
   display: none;
 }
 
+.difficulty-level {
+  position: absolute;
+  top: 12%; 
+  left: 30%; 
+  background-color: rgba(0, 0, 0, 0.8);
+  border-radius: 10px;
+  font-size: 18px;
+  text-align: center;
+  display: flex;
+  padding: 5px 10px;
+}
+
+.difficulty-level h1 {
+  color: #ff5722; /* Or any color you prefer */
+}
+
+.difficulty-level span {
+  color: #12b8dd;
+}
 
 
 .blinky {
