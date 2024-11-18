@@ -527,7 +527,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.addEventListener("click", () => {
       initializeMicrophone();
-      startGame();
+      // startGame();
       // togglePause(1);
     });
 
