@@ -58,9 +58,10 @@ document.addEventListener("DOMContentLoaded", () => {
       }
       else if (layout[i] === 5) {
         squares[i].classList.add("safe-zone");
-      } 
+      }
     }
   }
+
   createBoard();
   let chosenDifficulty = "Medium";
   let lastdirection;
@@ -79,16 +80,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   function screensReset(){
-    document.getElementById("start-screen").style.display = "flex";
-    document.getElementById("help-screen").style.display = "none";
-    document.getElementById("health").style.display = "none";
+    showElement("start-screen");
+    hideElement("help-screen");
+    hideElement("health");
   }
 
 
   function restartGame(resetLives) {
-    const cmdElement = document.getElementById("cmd");
-    cmdElement.style.display = "none";
-  
+    hideElement("cmd");
     pacmanCurrentIndex = 574;
     pacmanVelocity = {x: 0, y: 0};
     intendedDirection = {x: 0, y: 0};
@@ -107,9 +106,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
       gameStarted = false;
       lives = 3; 
-      document.getElementById("heart1").style.display = "grid";
-      document.getElementById("heart2").style.display = "grid";
-      document.getElementById("heart3").style.display = "grid";
+      showElement("heart1");
+      showElement("heart2");
+      showElement("heart3");
 
       grid.innerHTML = "";
       squares.length = 0; 
@@ -131,77 +130,45 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   
-
-
-
   function displayCmd(cmd) {
     const cmdElement = document.getElementById("cmd");
     cmdElement.innerHTML = cmd;  
     cmdElement.style.display = "inline"; 
   }
 
+  const commandMap = {
+    left: () => { intendedDirection = { x: -1, y: 0 }; isMoving = true; },
+    west: () => { intendedDirection = { x: -1, y: 0 }; isMoving = true; },
+    right: () => { intendedDirection = { x: 1, y: 0 }; isMoving = true; },
+    east: () => { intendedDirection = { x: 1, y: 0 }; isMoving = true; },
+    up: () => { intendedDirection = { x: 0, y: -1 }; isMoving = true; },
+    north: () => { intendedDirection = { x: 0, y: -1 }; isMoving = true; },
+    down: () => { intendedDirection = { x: 0, y: 1 }; isMoving = true; },
+    south: () => { intendedDirection = { x: 0, y: 1 }; isMoving = true; },
+    stop: () => { lastdirection = intendedDirection; isMoving = false; },
+    go: () => { if (!isMoving) { intendedDirection = lastdirection; isMoving = true; } },
+    keep: () => { if (!isMoving) { intendedDirection = lastdirection; isMoving = true; } },
+    start: () => { if (!gameStarted) startGame(); },
+    begin: () => { if (!gameStarted) startGame(); },
+    pause: () => { if (gameStarted) togglePause(0); },
+    resume: () => { if (gameStarted) togglePause(1); },
+    continue: () => { if (gameStarted) togglePause(1); },
+    restart: () => restartGame(true),
+    reset: () => restartGame(true),
+    help: () => getHelp(gameStarted ? 0 : 1),
+    instructions: () => getHelp(gameStarted ? 0 : 1),
+    directions: () => getHelp(gameStarted ? 0 : 1),
+  };
+  
   function handleVoiceCommand(command) {
     command = command.toLowerCase();
-    const commands = command.split(" "); 
-    
-    commands.forEach((cmd) => {
-      if (cmd.includes("left") || cmd.includes("west")) {
-        isMoving = true;
-        intendedDirection = { x: -1, y: 0 };
-        displayCmd(cmd)
-      } 
-      if (cmd.includes("right") || cmd.includes("east")) {
-        isMoving = true;
-        intendedDirection = { x: 1, y: 0 };
-        displayCmd(cmd)
-      } 
-      if (cmd.includes("north") || cmd.includes("up") ) {
-        isMoving = true;
-        intendedDirection = { x: 0, y: -1 };
-        displayCmd(cmd)
-      } 
-      if (cmd.includes("south") || cmd.includes("down")) {
-        isMoving = true;
-        intendedDirection = { x: 0, y: 1 };
-        displayCmd(cmd)
-      } 
-      if (cmd.includes("stop") || cmd.includes("halt")) {
-        displayCmd(cmd)
-        lastdirection = intendedDirection;
-        isMoving = false;
-      } 
-      if (cmd.includes("go") || cmd.includes("keep")) {
-        displayCmd(cmd)
-        if(!isMoving){
-          isMoving = true;
-          intendedDirection = lastdirection;
-        }
+    const words = command.split(" ");
+  
+    words.forEach((word) => {
+      if (commandMap[word]) {
+        displayCmd(word);
+        commandMap[word]();
       }
-      if ((cmd.includes("start") || cmd.includes("begin"))  && !gameStarted) {
-            startGame();
-      }
-      if (cmd.includes("pause") && gameStarted) {
-        // displayCmd(cmd)
-        togglePause(0);
-      } 
-      if ((cmd.includes("continue") || cmd.includes("resume")) && gameStarted) {
-        displayCmd("Resumed")
-         togglePause(1);
-      }
-      if (cmd.includes("restart") || cmd.includes("reset")) {
-        displayCmd("Restarted")
-        restartGame(true); 
-      }
-      if (cmd.includes("help") || cmd.includes("instructions") || cmd.includes("directions")) {
-        if(gameStarted) getHelp(0);
-        else getHelp(1);
-      }
-      if (cmd.includes("easy") || cmd.includes("medium") || cmd.includes("hard")) {
-        chosenDifficulty = cmd.charAt(0).toUpperCase() + cmd.slice(1);
-        updateDifficulty(chosenDifficulty);
-        applyDifficultySettings(chosenDifficulty);
-      }
-
     });
   }
   
@@ -209,14 +176,13 @@ document.addEventListener("DOMContentLoaded", () => {
   function getHelp(identifier) {
     if (identifier === 0) {
       isPaused = true;
-      document.getElementById("pause-screen").style.display = "none";
-      document.getElementById("help-screen").style.display = "flex";
-      document.getElementById("screen").style.display = "none";
+      hideElement('pause-screen');
+      showElement("help-screen");
+      hideElement("screen");
     } 
     else if (identifier === 1) {
-      document.getElementById("help-screen").style.display = "flex";
+      showElement("help-screen");
     }
-
   }
 
   function togglePause(identifier) {
@@ -227,19 +193,17 @@ document.addEventListener("DOMContentLoaded", () => {
       isPaused = false;
     }
     if (isPaused) {
-      document.getElementById("screen").style.display = "none";
-      document.getElementById("help-screen").style.display = "none";
-      document.getElementById("pause-screen").style.display = "flex";  
-      document.getElementById("health").style.display = "none";
-      document.getElementById("health").style.display = "flex";
-      
-
+      hideElement("screen");
+      hideElement("help-screen");
+      showElement("pause-screen");  
+      hideElement("health");
       console.log("Game Paused");
+
     } else if (!isPaused) {
-      document.getElementById("health").style.display = "grid";
-      document.getElementById("help-screen").style.display = "none";
-      document.getElementById("screen").style.display = "flex";
-      document.getElementById("pause-screen").style.display = "none";
+      showElement("health");
+      hideElement('help-screen');
+      showElement("screen");
+      hideElement('pause-screen');
       console.log("Game Resumed");
     }
   }
@@ -259,9 +223,9 @@ document.addEventListener("DOMContentLoaded", () => {
     pacmanInterval = setInterval(() => {
       if (!isPaused && isMoving) {  
         if(squares[pacmanCurrentIndex].classList.contains("safe-zone")){
-          document.getElementById("game-message").style.display = "flex";
+          showElement("game-message");
         }else{
-          document.getElementById("game-message").style.display = "none";
+         hideElement("game-message");
         }
         const nextIndex = pacmanCurrentIndex + pacmanVelocity.y * width + pacmanVelocity.x;
         const intendedNextIndex = pacmanCurrentIndex + intendedDirection.y * width + intendedDirection.x;
@@ -384,13 +348,13 @@ document.addEventListener("DOMContentLoaded", () => {
    
     function loseLife() {
       if (lives > 1) {
-        document.getElementById('heart' + lives).style.display = "none";
+        hideElement('heart' + lives);
         lives--;
     
-        document.getElementById("round-loss-screen").style.display = "flex";
+        showElement('round-loss-screen');
         
         setTimeout(() => {
-          document.getElementById("round-loss-screen").style.display = "none";
+          hideElement('round-loss-screen');
           restartGame(false); 
         }, 3000);
       }
@@ -402,12 +366,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function triggerGameOver() {
       isMoving = false; 
-      document.getElementById("health").style.display = "none";
-      document.getElementById("game-over-screen").style.display = "flex";
+      hideElement("health");
+      showElement("game-over-screen");
       squares[pacmanCurrentIndex].classList.remove("pac-man");
     
       setTimeout(() => {
-        document.getElementById("game-over-screen").style.display = "none";
+        hideElement("game-over-screen");
         restartGame(true); 
       }, 3000);
     }
@@ -459,7 +423,7 @@ document.addEventListener("DOMContentLoaded", () => {
         pacmanVelocity.x = 0;
         pacmanVelocity.y = 0;
     
-        document.getElementById("you-won-screen").style.display = "flex";
+        showElement("you-won-screen");
         setTimeout(function () {
           window.location.reload();
         }, 3000);
@@ -486,7 +450,7 @@ document.addEventListener("DOMContentLoaded", () => {
             moveGhost(ghost); 
           }
         });
-        console.log(`Difficulty set to ${level}. Ghost speed: ${settings.ghostSpeed}`);
+        // console.log(`Difficulty set to ${level}. Ghost speed: ${settings.ghostSpeed}`);
       } else {
         console.warn(`Unknown difficulty level: ${level}`);
       }
@@ -500,30 +464,53 @@ document.addEventListener("DOMContentLoaded", () => {
     
     function updateDifficulty(level) {
       const difficultyElement = document.getElementById("difficulty");
-      difficultyElement.innerText = level;
+      if (!difficultyElement) {
+          console.error("Element with ID 'difficulty' not found.");
+          return;
+      }
+        updateElementText("difficulty", level);
   
       const colorMap = {
-        Easy: "#12b8dd",
-        Medium: "#ffcc00",
-        Hard: "#ff5722",
+          Easy: "#12b8dd",  // Blue for Easy
+          Medium: "#ffcc00", // Yellow for Medium
+          Hard: "#ff5722",   // Red for Hard
       };
+
       difficultyElement.style.color = colorMap[level] || "#fff";
-    }
+  }
     
     function startGame(event) { 
       updateDifficulty(chosenDifficulty);
       applyDifficultySettings(chosenDifficulty);
       gameStarted = true;
       updateQuickstartMessage();
-      document.getElementById("start-screen").style.display = "none";
-      document.getElementById("help-screen").style.display = "none";
-      document.getElementById("health").style.display = "grid";
+      hideElement("start-screen");
+      hideElement("help-screen");
+      showElement("health");
       isMoving = true;
       movePacman();
       ghosts.forEach((ghost) => moveGhost(ghost));
     }
   
 
+
+    function showElement(id) {
+      const element = document.getElementById(id);
+      if (element) {
+        if(['health', 'heart1', 'heart2', 'heart3'].includes(id)) element.style.display = "grid";
+        else element.style.display = "flex";
+      }
+    }
+    
+    function hideElement(id) {
+      const element = document.getElementById(id);
+      if (element) element.style.display = "none";
+    }
+    
+    function updateElementText(id, text) {
+      const element = document.getElementById(id);
+      if (element) element.innerText = text;
+    }
 
     document.addEventListener("click", () => {
       initializeMicrophone();
