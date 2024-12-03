@@ -324,7 +324,7 @@ h1, h2, h3, span {
 
 #pause-screen {
   align-items: center;
-  background-image: url('background.png');
+  background-image: url('3zd.gif');
   background-color: rgba(0, 0, 0, 0.7);
   background-blend-mode: darken;
   z-index: -1;
@@ -336,6 +336,23 @@ h1, h2, h3, span {
   flex-direction: column; 
   }
   
+  #pause-screen p3 {
+    color: #0bf117;
+      position:fixed;
+      top:80%;
+      left:5%;
+      text-align: center; 
+      margin: 5px 0; 
+  }
+  #pause-screen p4 {
+    color: #0bf117;
+      position:fixed;
+      top:90%;
+      left:5%;
+      text-align: center; 
+      margin: 5px 0; 
+  }
+
 
   #pause-screen p1 {
     color: white;
@@ -346,6 +363,12 @@ h1, h2, h3, span {
     text-shadow: 2px 2px 5px rgba(165, 17, 17, 0.7);
     font-weight: bold;
     text-align: center;
+  }
+
+  .line0{
+    opacity: 0;
+    animation: fadeInUp 2s ease-in-out 2s forwards;
+    display: inline-block;
   }
 
 

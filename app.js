@@ -158,6 +158,9 @@ document.addEventListener("DOMContentLoaded", () => {
     help: () => getHelp(gameStarted ? 0 : 1),
     instructions: () => getHelp(gameStarted ? 0 : 1),
     directions: () => getHelp(gameStarted ? 0 : 1),
+    easy: () => { updateDifficulty("Easy"); applyDifficultySettings("Easy"); },
+    medium: () => { updateDifficulty("Medium"); applyDifficultySettings("Medium"); },
+    hard: () => { updateDifficulty("Hard"); applyDifficultySettings("Hard"); },
   };
   
   function handleVoiceCommand(command) {
@@ -166,7 +169,9 @@ document.addEventListener("DOMContentLoaded", () => {
   
     words.forEach((word) => {
       if (commandMap[word]) {
-        displayCmd(word);
+        if (!["easy", "medium", "hard"].includes(word)) {
+          displayCmd(word);
+        }
         commandMap[word]();
       }
     });
@@ -193,6 +198,8 @@ document.addEventListener("DOMContentLoaded", () => {
       isPaused = false;
     }
     if (isPaused) {
+      document.getElementById("current-score").textContent = score;
+      document.getElementById("remaining-lives").textContent = lives;
       hideElement("screen");
       hideElement("help-screen");
       showElement("pause-screen");  
