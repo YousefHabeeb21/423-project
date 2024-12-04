@@ -353,6 +353,19 @@ h1, h2, h3, span {
       margin: 5px 0; 
   }
 
+  #pause-screen p5 {
+    color: #0bf117;
+      font-size: 1.5rem;
+      position:fixed;
+      top:10%;
+      left:5%;
+      text-align: center; 
+      margin: 5px 0; 
+  }
+
+  #current-score, #remaining-lives, #diff {
+    color: yellow;
+  }
 
   #pause-screen p1 {
     color: white;
@@ -365,10 +378,17 @@ h1, h2, h3, span {
     text-align: center;
   }
 
-  .line0{
-    opacity: 0;
-    animation: fadeInUp 2s ease-in-out 2s forwards;
-    display: inline-block;
+  .line0 {
+    animation: blink 3s ease-in-out infinite, fadeInOut 3s ease-in-out infinite;
+    margin-top: 30%;
+    position: fixed;
+    left: 60%;
+    display: inline;
+  }
+
+  @keyframes fadeInOut {
+    0%, 100% { opacity: 0; }
+    50% { opacity: 1; }
   }
 
 

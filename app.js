@@ -132,8 +132,14 @@ document.addEventListener("DOMContentLoaded", () => {
   
   function displayCmd(cmd) {
     const cmdElement = document.getElementById("cmd");
+    if (cmd === "keep" || cmd === "go"){
+      cmdElement.innerHTML = "keep going";
+      cmdElement.style.display = "inline";
+    }
+    else{
     cmdElement.innerHTML = cmd;  
     cmdElement.style.display = "inline"; 
+    }
   }
 
   const commandMap = {
@@ -200,6 +206,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (isPaused) {
       document.getElementById("current-score").textContent = score;
       document.getElementById("remaining-lives").textContent = lives;
+      document.getElementById("diff").textContent = chosenDifficulty;
       hideElement("screen");
       hideElement("help-screen");
       showElement("pause-screen");  
@@ -470,6 +477,7 @@ document.addEventListener("DOMContentLoaded", () => {
     };
     
     function updateDifficulty(level) {
+      chosenDifficulty = level;
       const difficultyElement = document.getElementById("difficulty");
       if (!difficultyElement) {
           console.error("Element with ID 'difficulty' not found.");
