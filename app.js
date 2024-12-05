@@ -290,8 +290,22 @@ document.addEventListener("DOMContentLoaded", () => {
       if (squares[pacmanCurrentIndex].classList.contains("power-pellet")) {
         score += 10;
         ghosts.forEach((ghost) => (ghost.isScared = true));
-        clearTimeout(unScareGhosts.timerId); 
-        unScareGhosts.timerId = setTimeout(unScareGhosts, 10000);
+        // clearTimeout(unScareGhosts.timerId); 
+        // unScareGhosts.timerId = setTimeout(unScareGhosts, 10000);
+        clearTimeout(unScareGhosts.timerId);
+        let countdown = 10;
+        console.log(`Ghosts will be unscared in ${countdown} seconds`);
+
+        unScareGhosts.timerId = setInterval(() => {
+          countdown--;
+          if (countdown > 0) {
+            console.log(`Ghosts will be unscared in ${countdown} seconds`);
+          } else {
+            console.log("Unscaring ghosts now");
+            clearInterval(unScareGhosts.timerId);
+            unScareGhosts();
+          }
+        }, 1000);
         squares[pacmanCurrentIndex].classList.remove("power-pellet");
         checkForWin();
       }
@@ -529,7 +543,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.addEventListener("click", () => {
       initializeMicrophone();
-      // startGame();
+      startGame();
       // togglePause(1);
     });
 
@@ -552,7 +566,7 @@ document.addEventListener("DOMContentLoaded", () => {
     recognizer.recognizing = (s, e) => {
       if (e.result.reason === SpeechSDK.ResultReason.RecognizingSpeech) {
         handleVoiceCommand(e.result.text); 
-        console.log(e.result.text);
+        // console.log(e.result.text);
       } else if (e.result.reason === SpeechSDK.ResultReason.NoMatch) {
         console.log("No speech recognized.");
       }
