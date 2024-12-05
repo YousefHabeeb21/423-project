@@ -170,6 +170,7 @@ document.addEventListener("DOMContentLoaded", () => {
     hard: () => { updateDifficulty("Hard"); applyDifficultySettings("Hard"); },
   };
   
+  
   function handleVoiceCommand(command) {
     command = command.toLowerCase();
     const words = command.split(" ");
@@ -549,7 +550,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
   
-
+    
 
 
   function initializeMicrophone() {
