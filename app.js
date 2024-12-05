@@ -40,26 +40,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const squares = [];
 
-
   function createBoard() {
+    const fragment = document.createDocumentFragment();
+  
     for (let i = 0; i < layout.length; i++) {
       const square = document.createElement("div");
-      grid.appendChild(square);
+      fragment.appendChild(square); 
       squares.push(square);
-
+  
       if (layout[i] === 0) {
-        squares[i].classList.add("pac-dot");
+        square.classList.add("pac-dot");
       } else if (layout[i] === 1) {
-        squares[i].classList.add("wall");
+        square.classList.add("wall");
       } else if (layout[i] === 2) {
-        squares[i].classList.add("ghost-lair");
+        square.classList.add("ghost-lair");
       } else if (layout[i] === 3) {
-        squares[i].classList.add("power-pellet");
-      }
-      else if (layout[i] === 5) {
-        squares[i].classList.add("safe-zone");
+        square.classList.add("power-pellet");
+      } else if (layout[i] === 5) {
+        square.classList.add("safe-zone");
       }
     }
+      grid.appendChild(fragment);
   }
 
   createBoard();
@@ -543,7 +544,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.addEventListener("click", () => {
       initializeMicrophone();
-      startGame();
+      // startGame();
       // togglePause(1);
     });
 
